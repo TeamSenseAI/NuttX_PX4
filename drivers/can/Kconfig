@@ -135,6 +135,12 @@ config CAN_USE_RTR
 	---help---
 		This selection includes RTR bitfield in the CAN header.
 
+config NET_CAN_EXTID
+	bool "Enable Extended ID support in CAN header"
+	default n
+	---help---
+		This selection enables Extended ID support in the CAN header.
+
 comment "CAN Bus Controllers:"
 
 config CAN_MCP2515

@@ -80,6 +80,13 @@ config NET_CAN_RAW_FILTER_MAX
 	---help---
 		Maximum number of CAN_RAW filters that can be set per CAN connection.
 
+config NET_CAN_CANFD
+	bool "CAN_RAW_FD_FRAMES sockopt"
+	default n
+	depends on NET_CAN_SOCK_OPTS
+	---help---
+		Enable support for socket option CAN_RAW_FD_FRAMES
+
 config NET_CAN_NOTIFIER
 	bool "Support CAN notifications"
 	default n
