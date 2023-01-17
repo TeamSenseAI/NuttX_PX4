@@ -175,6 +175,7 @@ static inline void can_newdata(FAR struct net_driver_s *dev,
 
   if (recvlen < dev->d_len)
     {
+      printf("Need to buffer %d locally\n", dev->d_len - recvlen );
       FAR struct can_conn_s *conn =
         (FAR struct can_conn_s *)pstate->pr_sock->s_conn;
       FAR uint8_t *buffer = (FAR uint8_t *)dev->d_appdata + recvlen;
@@ -416,13 +417,16 @@ static uint16_t can_recvfrom_eventhandler(FAR struct net_driver_s *dev,
 
   if (pstate)
     {
+      // For some reason, the prior casting code only picked up the first byte of the data
+      // Endianess issue? Manually reconstruct it here for stm32f
+      const canid_t id = dev->d_appdata[0] + (dev->d_appdata[1]<<8) + (dev->d_appdata[2]<<16) + (dev->d_appdata[3]<<24);
       if ((flags & CAN_NEWDATA) != 0)
         {
           /* If a new packet is available, check receive filters
            * when is valid then complete the read action.
            */
 #ifdef CONFIG_NET_CANPROTO_OPTIONS
-          if (can_recv_filter(conn, (canid_t) *dev->d_appdata) == 0)
+          if (can_recv_filter(conn, id) == 0)
             {
               flags &= ~CAN_NEWDATA;
               return flags;
@@ -641,7 +645,7 @@ ssize_t can_recvmsg(FAR struct socket *psock, FAR struct msghdr *msg,
             }
         }
 #endif
-
+      printf("can_readahead, skipping\n");
       goto errout_with_state;
     }
 
@@ -658,7 +662,7 @@ ssize_t can_recvmsg(FAR struct socket *psock, FAR struct msghdr *msg,
       if (ret < 0)
         {
           /* Nothing was received */
-
+          printf("can_readahead, no data\n");
           ret = -EAGAIN;
           goto errout_with_state;
         }
@@ -669,6 +673,7 @@ ssize_t can_recvmsg(FAR struct socket *psock, FAR struct msghdr *msg,
   dev  = conn->dev;
   if (dev == NULL)
     {
+      printf("can_readahead, device is null\n");
       ret = -ENODEV;
       goto errout_with_state;
     }
