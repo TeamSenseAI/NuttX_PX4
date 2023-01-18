@@ -2522,15 +2522,15 @@ errout:
 #if !defined(CONFIG_NETDEV_LATEINIT)
 void arm_netinitialize(void)
 {
-#ifdef CONFIG_STM32F7_CAN1
+#if defined(CONFIG_STM32F7_CAN1) && defined(CONFIG_STM32F7_CAN1_SOCKETCAN)
   stm32_cansockinitialize(1);
 #endif
 
-#ifdef CONFIG_STM32F7_CAN2
+#if defined(CONFIG_STM32F7_CAN2) && defined(CONFIG_STM32F7_CAN2_SOCKETCAN)
   stm32_cansockinitialize(2);
 #endif
 
-#ifdef CONFIG_STM32F7_CAN3
+#if defined(CONFIG_STM32F7_CAN3) && defined(CONFIG_STM32F7_CAN3_SOCKETCAN)
   stm32_cansockinitialize(3);
 #endif
 }

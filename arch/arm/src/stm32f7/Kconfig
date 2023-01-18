@@ -5269,7 +5269,28 @@ config STM32F7_CAN3_BAUD
 	default 250000
 	depends on STM32F7_CAN3
 	---help---
-		CAN2 BAUD rate.  Required if CONFIG_STM32F7_CAN2 is defined.
+		CAN3 BAUD rate.  Required if CONFIG_STM32F7_CAN3 is defined.
+
+config STM32F7_CAN1_SOCKETCAN
+	bool "CAN1 SOCKETCAN"
+	default n
+	depends on STM32F7_CAN1
+	---help---
+		CAN1 used for SocketCAN.
+
+config STM32F7_CAN2_SOCKETCAN
+	bool "CAN2 SOCKETCAN"
+	default n
+	depends on STM32F7_CAN2
+	---help---
+		CAN2 used for SocketCAN.
+
+config STM32F7_CAN3_SOCKETCAN
+	bool "CAN3 SOCKETCAN"
+	default n
+	depends on STM32F7_CAN3
+	---help---
+		CAN3 used for SocketCAN.
 
 config STM32F7_CAN_TSEG1
 	int "TSEG1 quanta"
