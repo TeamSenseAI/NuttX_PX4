@@ -645,7 +645,6 @@ ssize_t can_recvmsg(FAR struct socket *psock, FAR struct msghdr *msg,
             }
         }
 #endif
-      printf("can_readahead, skipping\n");
       goto errout_with_state;
     }
 
@@ -662,7 +661,6 @@ ssize_t can_recvmsg(FAR struct socket *psock, FAR struct msghdr *msg,
       if (ret < 0)
         {
           /* Nothing was received */
-          printf("can_readahead, no data\n");
           ret = -EAGAIN;
           goto errout_with_state;
         }
@@ -673,7 +671,6 @@ ssize_t can_recvmsg(FAR struct socket *psock, FAR struct msghdr *msg,
   dev  = conn->dev;
   if (dev == NULL)
     {
-      printf("can_readahead, device is null\n");
       ret = -ENODEV;
       goto errout_with_state;
     }
@@ -693,7 +690,7 @@ ssize_t can_recvmsg(FAR struct socket *psock, FAR struct msghdr *msg,
        * the task sleeps and automatically re-locked when the task restarts.
        */
 
-      ret = net_lockedwait(&state.pr_sem);
+        ret = net_lockedwait(&state.pr_sem);
 
       /* Make sure that no further events are processed */
 
