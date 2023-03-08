@@ -1152,6 +1152,7 @@ static int stm32can_netdev_ioctl(struct net_driver_s *dev, int cmd,
 {
   struct stm32_can_s *priv = (struct stm32_can_s *)dev->d_private;
   int                 ret  = OK;
+  UNUSED(priv);
 
   switch (cmd)
     {
@@ -2392,14 +2393,14 @@ int stm32_cansockinitialize(int port)
   struct stm32_can_s *priv = NULL;
   int                 ret  = OK;
 
-  ninfo("CAN%" PRIu8 "\n", port);
+  syslog(6,"CAN%" PRIu8 "\n", port);
 
   /* NOTE:  Peripherical clocking for CAN1 and/or CAN2 was already provided
    * by stm32_clockconfig() early in the reset sequence.
    */
 
 #ifdef CONFIG_STM32_CAN1
-  if (port == 1)
+  if (port == 0)
     {
       /* Select the CAN1 device structure */
 
@@ -2415,7 +2416,7 @@ int stm32_cansockinitialize(int port)
   else
 #endif
 #ifdef CONFIG_STM32_CAN2
-  if (port == 2)
+  if (port == 1)
     {
       /* Select the CAN2 device structure */
 
@@ -2476,11 +2477,11 @@ errout:
 #if !defined(CONFIG_NETDEV_LATEINIT)
 void arm_netinitialize(void)
 {
-#ifdef CONFIG_STM32_CAN1
+#if defined(CONFIG_STM32_CAN1) && defined(STM32_CAN1_SOCKETCAN)
   stm32_cansockinitialize(0);
 #endif
 
-#ifdef CONFIG_STM32_CAN2
+#if defined(CONFIG_STM32_CAN2) && defined(CONFIG_STM32_CAN2_SOCKETCAN)
   stm32_cansockinitialize(1);
 #endif
 }

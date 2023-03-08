@@ -11130,6 +11130,20 @@ config STM32_CAN_SOCKET
 
 endchoice # CAN character driver or SocketCAN support
 
+config STM32_CAN1_SOCKETCAN
+	bool "CAN1 SOCKETCAN"
+	default n
+	depends on STM32_CAN1
+	---help---
+		CAN1 used for SocketCAN.
+
+config STM32_CAN2_SOCKETCAN
+	bool "CAN2 SOCKETCAN"
+	default n
+	depends on STM32_CAN2
+	---help---
+		CAN2 used for SocketCAN.
+
 config STM32_CAN1_BAUD
 	int "CAN1 BAUD"
 	default 250000
