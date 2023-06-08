@@ -142,6 +142,12 @@ static inline void imxrt_tcmenable(void)
  *   This is the reset entry point.
  *
  ****************************************************************************/
+#define JMP(addr) \
+    __asm__("mov pc,%0" \
+            : /*output*/ \
+            : /*input*/ \
+            "r" (addr) \
+           );
 
 void __start(void)
 {
@@ -151,7 +157,14 @@ void __start(void)
   /* Make sure that interrupts are disabled and set SP */
 
   __asm__ __volatile__ ("\tcpsid  i\n");
-  __asm__ __volatile__ ("MSR MSP, %0\n" : : "r" (IDLE_STACK) :);
+  JMP((uintptr_t)__start+12);
+  __asm__ __volatile__ ("\tpush {r0}\n");
+  __asm__ __volatile__ ("\tpush {r0}\n");
+  __asm__ __volatile__ ("\tpush {r0}\n");
+  __asm__ __volatile__ ("\tpush {r0}\n");
+
+
+//  __asm__ __volatile__ ("MSR MSP, %0\n" : : "r" (IDLE_STACK) :);
 
   /* Make sure VECTAB is set to NuttX vector table
    * and not the one from the boot ROM and have consistency
